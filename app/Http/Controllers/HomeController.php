@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Produto;
 use App\Pedido;
+use App\Cliente;
+use App\User;
 
 class HomeController extends Controller
 {
@@ -28,6 +30,14 @@ class HomeController extends Controller
 
         $ultimosPedidos = $pedido->take(5)->orderBy('pedido_id', 'desc')->get();
 
-        return view('dashboard', compact(['ultimosProdutos', 'ultimosPedidos']));
+        $contagemClientes = Cliente::count();
+        $contagemPedidos = Pedido::count();
+        $contagemProdutos = Produto::count();
+        $usuariosCadastrados = User::count();
+
+        return view('dashboard', compact([
+            'ultimosProdutos', 'ultimosPedidos', 'contagemClientes',
+            'contagemPedidos', 'contagemProdutos', 'usuariosCadastrados'
+            ]));
     }
 }

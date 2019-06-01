@@ -9,14 +9,18 @@
                 <div class="card bg-secondary shadow border-0">
                     <div class="card-body px-lg-5 py-lg-5">
                         <div class="text-center text-muted mb-4">
+                            @if (\App\User::where('email', 'admin@admin.com'))
                             <small>
-                                <a href="{{ route('register') }}">{{ __('Criar uma nova conta') }}</a> {{ __('ou acessar usando as credenciais abaixo:') }}
+                                <a href="{{ route('register') }}">Criar uma nova conta</a> ou acessar usando as credenciais abaixo:
                             </small>
                             <br>
                             <small>
                                 Usuário <strong>admin@admin.com</strong>
                                 Senha <strong>12345678</strong>
                             </small>
+                            @else 
+
+                            @endif
                         </div>
                         <form role="form" method="POST" action="{{ route('login') }}">
                             @csrf
