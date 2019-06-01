@@ -52,11 +52,11 @@ class PedidoController extends Controller
             'produto_id.*' => 'required|numeric|exists:produtos,produto_id',
         ],
         [
-            'required' => 'Você deixou algum campo em branco, aguarde ele se autocompletar e tente novamente',
+            'required' => 'Você deixou algum campo em branco, aguarde o autocompletar e tente novamente',
             'cliente_id.required'   => 'O nome do cliente é obrigatório',
             'cliente_id.exists'     => 'Este cliente não está cadastrado',
             'exists'                => 'Campo obrigatório',
-            'produto_id.'
+            'produto_id.'           => '',
         ]);
         
         // Primeiro adiciona o pedido ao banco
@@ -65,10 +65,13 @@ class PedidoController extends Controller
         $pedido->status = $request->status;
         $pedido->save();
 
+        // Pegar o ID do pedido recém salvo
+        $idPedido = $pedido->pedido_id;
+        
         // Aidiciona um ou mais produtos ao pedido
         for($i = 0; $i < count($request->produto_id); $i++) {
             $pedidoProduto = new PedidoProduto;
-            $pedidoProduto->pedido_id = $pedido->id;
+            $pedidoProduto->pedido_id = $idPedido;
             $pedidoProduto->produto_id = $request->produto_id[$i];
             $pedidoProduto->save();
         }
@@ -96,8 +99,8 @@ class PedidoController extends Controller
     public function edit($id)
     {
         $pedido = Pedido::findOrFail($id);
-
-        return view('pedido.editar', compact($pedido));
+        
+        return view('pedido.editar', compact('pedido'));
     }
 
     /**
@@ -109,7 +112,24 @@ class PedidoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->middleware('VerifiyCsrfToken');
+
+        $this->validate($request, [
+            'cliente_id' => 'required|exists:clientes,cliente_id',
+            'status' => 'required',
+        ],
+        [
+            'required'              => 'Você deixou algum campo em branco, aguarde o autocompletar e tente novamente',
+            'cliente_id.required'   => 'O nome do cliente é obrigatório',
+            'cliente_id.exists'     => 'Este cliente não está cadastrado',
+        ]);
+
+        $pedido = Pedido::findOrFail($id);
+        $pedido->cliente_id = $request->cliente_id;
+        $pedido->status = $request->status;
+        $pedido->save();
+
+        return redirect()->route('pedido.edit', $pedido->pedido_id)->with('status', 'Pedido atualizado.');
     }
 
     /**
@@ -120,6 +140,9 @@ class PedidoController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $pedido = Pedido::findOrFail($id);
+        $pedido->delete();
+
+        return redirect()->route('pedido.index')->with('status', 'O pedido foi deletado');
     }
 }

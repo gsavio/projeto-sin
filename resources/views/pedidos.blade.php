@@ -85,9 +85,9 @@
                                     @endif
                                 </td>
                                 <td class="d-flex">
-                                    <a class="btn btn-sm btn-primary" href="{{ route('produto.edit', $produto->produto_id) }}">Editar</a> 
+                                    <a class="btn btn-sm btn-primary" href="{{ route('pedido.edit', $pedido->pedido_id) }}">Editar</a> 
 
-                                    <form class="deletar" action="{{ route('produto.destroy', $produto->produto_id) }}" method="POST">
+                                    <form class="deletar" action="{{ route('pedido.destroy', $pedido->pedido_id) }}" method="POST">
                                         @csrf
                                         @method('delete')
                                         
