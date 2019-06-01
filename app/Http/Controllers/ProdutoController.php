@@ -12,7 +12,7 @@ class ProdutoController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(ChecarPermissao::class);
+        $this->middleware(ChecarPermissao::class)->except(['index', 'listarProdutosJson']);
     }
     /**
      * Display a listing of the resource.

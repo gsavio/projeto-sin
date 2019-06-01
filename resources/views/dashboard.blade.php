@@ -5,7 +5,7 @@
 
 <div class="container-fluid mt--7">
     <div class="row mt-5">
-        <div class="col-xl-8 mb-5 mb-xl-0">
+        <div class="col-xl-6 mb-5 mb-xl-0">
             <div class="card shadow">
                 <div class="card-header border-0">
                     <div class="row align-items-center">
@@ -41,7 +41,7 @@
                                     R$ {{ $produto->valor }}
                                 </td>
                                 <td>
-                                    <a href="{{ route('produto.edit', $produto->produto_id) }}">Editar</a>
+                                    <strong><a href="{{ route('produto.edit', $produto->produto_id) }}">Editar</a></strong>
                                 </td>
                             </tr>
                             @empty
@@ -52,7 +52,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-4">
+        <div class="col-xl-6">
             <div class="card shadow">
                 <div class="card-header border-0">
                     <div class="row align-items-center">
@@ -71,6 +71,7 @@
                             <tr>
                                 <th scope="col">Nº do Pedido</th>
                                 <th scope="col">Cliente</th>
+                                <th scope="col">Valor Total</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Ação</th>
                             </tr>
@@ -79,9 +80,32 @@
                             @forelse ($ultimosPedidos as $pedido)
                                 <tr>
                                     <th scope="col">#{{ $pedido->pedido_id }}</th>
-                                    <th scope="col">{{ substr($pedido->cliente->nome, 0, 15) }}</th>
-                                    <th scope="col"><strong>{{ ucfirst($pedido->status) }}</strong></th>
-                                    <th scope="col"><a href="{{ route('pedido.edit', $pedido->pedido_id) }}">Editar</a></th>
+                                    <th scope="col">{{ substr($pedido->cliente->nome, 0, 17) }}...</th>
+                                    <th scope="col">
+                                        @php
+                                            $valorTotal = 0;
+                                        @endphp    
+                                            
+                                        @foreach ($pedido->pedido_produtos as $produto)
+                                            @php
+                                                $valorTotal += (float) $produto->produto->valor;
+                                            @endphp
+                                        @endforeach
+    
+                                        R$ {{ number_format($valorTotal, 2, ',', '.') }}
+                                    </th>
+                                    <th scope="col">
+                                        @if ($pedido->status === 'reservado')
+                                            <strong class="text-info">{{ ucfirst($pedido->status) }}</strong>
+                                        @elseif($pedido->status === 'pago')
+                                            <strong class="text-success">{{ ucfirst($pedido->status) }}</strong>
+                                        @else
+                                            <strong class="text-danger">{{ ucfirst($pedido->status) }}</strong>
+                                        @endif
+                                    </th>
+                                    <th scope="col">
+                                        <strong><a href="{{ route('pedido.edit', $pedido->pedido_id) }}">Editar</a></strong>
+                                    </th>
                                 </tr>
                             @empty
                                 

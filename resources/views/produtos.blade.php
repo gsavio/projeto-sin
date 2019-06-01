@@ -9,7 +9,7 @@
 
 <div class="container-fluid mt--7">
     <div class="row mt-5">
-        <div class="col-xl-10 mx-auto mb-5 mb-xl-0">
+        <div class="col-xl-12 mx-auto mb-5 mb-xl-0">
             <div class="card shadow">
                 <div class="card-header border-0">
 

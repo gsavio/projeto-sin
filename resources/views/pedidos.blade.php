@@ -76,7 +76,13 @@
                                     R$ {{ number_format($valorTotal, 2, ',', '.') }}
                                 </td>                                
                                 <td>
-                                    <strong>{{ ucfirst($pedido->status) }}</strong>
+                                    @if ($pedido->status === 'reservado')
+                                        <strong class="text-info">{{ ucfirst($pedido->status) }}</strong>
+                                    @elseif($pedido->status === 'pago')
+                                        <strong class="text-success">{{ ucfirst($pedido->status) }}</strong>
+                                    @else
+                                        <strong class="text-danger">{{ ucfirst($pedido->status) }}</strong>
+                                    @endif
                                 </td>
                                 <td class="d-flex">
                                     <a class="btn btn-sm btn-primary" href="{{ route('produto.edit', $produto->produto_id) }}">Editar</a> 

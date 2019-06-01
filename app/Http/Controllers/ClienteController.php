@@ -12,7 +12,7 @@ class ClienteController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(ChecarPermissao::class)->except('listaClintesJson');
+        $this->middleware(ChecarPermissao::class)->except(['index', 'listaClintesJson']);
     }
 
     /**

@@ -21,16 +21,6 @@
                     </div>
                 </div>
                 <div class="card-body">
-                        @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-
                     <form method="post" action="{{ route('pedido.store') }}" autocomplete="off">
                         @csrf
                         @method('post')
@@ -107,6 +97,21 @@
                                         <h3 class="valor"></h3>
                                     </div>
                                 </div>
+
+                                {{-- <div class="row produto campo-extra">
+                                    <div class="col-12 col-md-8">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-valor">Produto</label>
+                                            <input type="text" class="input-produto form-control form-control-alternative ui-autocomplete-input" placeholder="Nome do Produto" required="" autofocus="" autocomplete="off">
+
+                                                                                    </div>
+                                        <input type="hidden" name="produto_id[]" value="">
+                                    </div>
+                                    <div class="col-12 col-md-4 dados d-flex align-items-center">
+                                        <h3 class="valor"></h3>
+                                    </div>
+                                    <div class="excluir-campo" onclick="excluirCampo(this)"><i class="far fa-trash-alt"></i></div>
+                                </div> --}}
                             </div>
                             <div class="row">
                                 <div class="col-12 col-md-8 text-center">

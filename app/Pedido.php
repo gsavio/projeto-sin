@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pedido extends Model
 {
+    protected $fillable = [
+        'cliente_id', 'status'
+    ];
+
     public function cliente()
     {
         return $this->hasOne(Cliente::class, 'cliente_id', 'cliente_id');
