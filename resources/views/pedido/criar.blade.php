@@ -21,11 +21,18 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <form method="post" action="{{ route('produto.store') }}" autocomplete="off">
+                    <form method="post" action="{{ route('pedido.store') }}" autocomplete="off">
                         @csrf
                         @method('post')
 
-                        <h6 class="heading-small text-muted mb-4">Informações sobre o pedido</h6>
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                <h6 class="heading-small text-muted mb-4">Informações sobre o pedido</h6>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <h6 class="heading-small text-muted text-right mb-4">Valor total: <span id="valorTotal">0,00</span></h6>
+                            </div>
+                        </div>
 
                         @if (session('status'))
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -37,45 +44,62 @@
                         @endif
 
                         <div class="pl-lg-4">
-                            <div class="form-group{{ $errors->has('nome') ? ' has-danger' : '' }}">
-                                <label class="form-control-label" for="input-nome">Nome do(a) cliente</label>
-                                <input type="text" name="nome" id="input-nome"
-                                    class="form-control form-control-alternative{{ $errors->has('nome') ? ' is-invalid' : '' }}"
-                                    placeholder="Nome do(a) cliente ou código" required autofocus>
+                            <div class="row">
+                                <div class="col-12 col-md-8">
+                                    <div class="form-group{{ $errors->has('nome') ? ' has-danger' : '' }}">
+                                        <label class="form-control-label" for="input-nome">Nome do(a) cliente</label>
+                                        <input type="text" name="nome" id="input-nome" class="form-control form-control-alternative{{ $errors->has('nome') ? ' is-invalid' : '' }}" placeholder="Nome do(a) cliente ou código" required autofocus>
+                                        <input type="hidden" name="cliente_id">
 
-                                @if ($errors->has('nome'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('nome') }}</strong>
-                                </span>
-                                @endif
-                            </div>
-
-                            <div class="campos-produtos">
-                                <div class="row">
-                                    <div class="col-12 col-md-8">
-                                        <div class="form-group{{ $errors->has('valor') ? ' has-danger' : '' }} input-produto">
-                                            <label class="form-control-label" for="input-valor">Produto</label>
-                                            <input type="text" name="produto[]" id="input-valor"
-                                                class="input-produto form-control form-control-alternative{{ $errors->has('valor') ? ' is-invalid' : '' }}"
-                                                placeholder="Nome do Produto" required autofocus>
-
-                                            @if ($errors->has('valor'))
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $errors->first('valor') }}</strong>
-                                            </span>
-                                            @endif
-                                        </div>
+                                        @if ($errors->has('nome'))
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('nome') }}</strong>
+                                        </span>
+                                        @endif
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-12 text-center">
-                                        <a class="btn btn-primary mt-2" onclick="addCampo('idioma')">Novo produto</a>
+
+                                <div class="col-12 col-md-4">
+                                    <div class="form-group{{ $errors->has('status') ? ' has-danger' : '' }}">
+                                        <label class="form-control-label" for="input-status">Status do pedido</label>
+                                        <select name="status" id="input-status" class="form-control form-control-alternative{{ $errors->has('status') ? ' is-invalid' : '' }}" placeholder="status do(a) cliente ou código" required autofocus>
+                                            <option value="">Selecione o status</option>
+                                            <option value="1">Reservado</option>
+                                            <option value="2">Pago</option>
+                                            <option value="3">Cancelado</option>
+                                        </select>
+        
+                                        @if ($errors->has('status'))
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('status') }}</strong>
+                                        </span>
+                                        @endif
                                     </div>
+                                </div>
+                            </div>
+
+                            <div class="produtos">
+                                <div class="row produto">
+                                    <div class="col-12 col-md-8">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-valor">Produto</label>
+                                            <input type="text" class="input-produto form-control form-control-alternative" placeholder="Nome do Produto" required autofocus />
+                                        </div>
+                                        <input type="hidden" name="produto_id[]">
+                                    </div>
+                                    <div class="col-12 col-md-4 dados d-flex align-items-center">
+                                        <h3 class="valor"></h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <a class="btn btn-primary mt-2 novo-produto" onclick="addCampo('produto')">Adicionar produto</a>
                                 </div>
                             </div>
 
                             <div class="text-center">
-                                <button type="submit" class="btn btn-success mt-4">Adicionar</button>
+                                <button type="submit" class="btn btn-success mt-4">Criar pedido</button>
                             </div>
                         </div>
                     </form>
@@ -101,15 +125,27 @@
                         q: request.term
                     },
                     success: function (data) {
-                        console.log(data)
                         response(data);
+
+                        
                     }
                 });
             },
             minLength: 2,
             delay: 100,
-        });
+            select: function(e, ui) {
+                $(this).next('input[type=hidden]').val(ui.item.cliente_id)
+            }
+        })
 
+        autocompletarProduto()
+
+        $('.input-produto').on('change', function(e) {
+            $(this).next('input').val(e.target.value)
+        })
+    })
+
+    var autocompletarProduto = function() {
         $(".input-produto").autocomplete({
             source: function (request, response) {
                 $.ajax({
@@ -119,15 +155,26 @@
                         q: request.term
                     },
                     success: function (data) {
-                        console.log(data)
                         response(data);
-                    }
+                    },
                 });
             },
             minLength: 2,
             delay: 100,
-        });
-    })
+            select: function(e, ui) {
+                console.log(ui.item)
+
+                $(this).parents('div.col-12.col-md-8').children('input[type=hidden]').val(ui.item.produto_id)
+
+                $(this).parents('div.produto')
+                .children('.dados')
+                .children('h3')
+                .html(ui.item.valor.toLocaleString("pt-BR", { style: "currency" , currency:"BRL"}))
+                .attr('data-valor', ui.item.valor)
+                
+            }
+        })
+    }
 
     // Adiciona um campo idêntico ao selecionado
     var addCampo = function (tipo) {
@@ -137,9 +184,10 @@
         novosInputs.classList.add('campo-extra')
 
         // Limpa os campos do elemento clonado
-        novosInputs.querySelectorAll('input, textarea').forEach(function (input) {
+        novosInputs.querySelectorAll('input, textarea, h3').forEach(function (input) {
             input.value = ''
             input.checked = false
+            input.innerHTML = ''
         })
 
         document.querySelector('.' + tipo + 's').appendChild(novosInputs)
@@ -149,9 +197,33 @@
         div.setAttribute('onclick', 'excluirCampo(this)')
         div.innerHTML = '<i class="far fa-trash-alt"></i>'
 
-        botaoExcluir = novosInputs.appendChild(div)
+        botaoExcluir = novosInputs.children[0].appendChild(div)
         novosInputs.appendChild(botaoExcluir)
+        autocompletarProduto()
+        document.querySelector('.input-produto').focus()
     }
 
+    var excluirCampo = function (el) {
+        el.parentElement.remove()
+        $('#valorTotal').html(calculoTotal())
+    }
+
+    var calculoTotal = function() {
+        var valorTotal = 0
+        $valorProduto = document.querySelectorAll('.valor')
+
+        $valorProduto.forEach(function(val) {
+            valor = parseFloat(val.getAttribute('data-valor'))
+            
+            valorTotal = valorTotal + valor
+        })    
+
+        return valorTotal.toLocaleString("pt-BR", { style: "currency" , currency:"BRL"})
+    }
+
+    // Eventos que são capturados mesmo havendo alterações no DOM
+    document.querySelector('body').addEventListener('change', function (e) {
+        $('#valorTotal').html(calculoTotal())
+    })
 </script>
 @endpush

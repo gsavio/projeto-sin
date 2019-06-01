@@ -36,7 +36,7 @@
                     <table class="table align-items-center table-flush">
                         <thead class="thead-light">
                             <tr>
-                                <th scope="col">Número do Pedido</th>
+                                <th scope="col"># Pedido</th>
                                 <th scope="col">Cliente</th>
                                 <th scope="col">Produtos</th>
                                 <th scope="col">Data do pedido</th>

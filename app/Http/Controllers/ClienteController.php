@@ -148,15 +148,14 @@ class ClienteController extends Controller
     }
 
     /**
-     * JSON com nomes dos clientes cadastrados
+     * Returna json com nomes dos clientes cadastrados
      * 
-     * @param string $busca
-     * @return 
+     * @return \Illuminate\Contracts\Routing\ResponseFactory::json
      */
     public function listaClientesJson() {
         $termo = Input::get('q');
 
-        $clientes = Cliente::select(\DB::raw('nome as label'))
+        $clientes = Cliente::select(\DB::raw('nome as label, cliente_id'))
             ->where('nome', 'like', '%'. $termo .'%')
             ->orWhere('cliente_id', 'like', '%'. $termo .'%')
             ->take(5)->get();

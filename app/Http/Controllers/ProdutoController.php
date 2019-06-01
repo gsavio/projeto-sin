@@ -75,7 +75,7 @@ class ProdutoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    { 
+    {
         $produtos = Produto::paginate(20);
 
         return view('produtos', compact('produtos'));
@@ -140,14 +140,20 @@ class ProdutoController extends Controller
         return redirect()->route('produto.index')->with('status', 'Produto deletado.');
     }
 
-    public function listarProdutosJson() {
+    /**
+     * Retorna json listando os produtos
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory::json
+     */
+    public function listarProdutosJson()
+    {
         $produto = Input::get('q');
 
-        $produtos = Produto::select(DB::raw('nome as label'))
-            ->where('nome', 'like', '%'. $produto .'%')
-            ->orWhere('produto_id', 'like', '%'. $produto .'%')
+        $produtos = Produto::select(\DB::raw('nome as label, produto_id, valor'))
+            ->where('nome', 'like', '%' . $produto . '%')
+            ->orWhere('produto_id', 'like', '%' . $produto . '%')
             ->take(5)->get();
-
+        
         return response()->json($produtos);
     }
 }
