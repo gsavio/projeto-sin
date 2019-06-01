@@ -4,27 +4,23 @@ Sistema de demonstração onde há a possibilidade de cadastrar e gerenciar clie
 
 ## Instalação
 
-Para funcionar, instale as depedências via composer executando:
-
-E em seguida rode as migrations para criar as tabelas do banco de dados
+Instale as depedências e o framework via composer executando:
 
 ```console
-$ php artisan migrate
+$ composer install
 ```
 
-Em seguida, rode as seeds para alimentar o banco de dados com dados fakes para teste e criar o usuário Administrador
+E em seguida rode as migrations para criar as tabelas do banco de dados juntamente com os seeds para popular as tabelas 
 
 ```console
-$ php artisan db:seed
+$ php artisan migrate --seed
 ```
 
 O login padrão será `admin@admin.com` e a senha `12345678`
 
-**Contém um arquivo docker-compose gerado por [Ambientum](https://github.com/ambientum/ambientum)**
-
 ## Sobre 
 
-Feito com:
+Utilizados neste projeto:
 
 - [Laravel](https://laravel.com)
 - [Argon](https://github.com/laravel-frontend-presets/argon)
