@@ -26,6 +26,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
 	Route::resource('cliente', 'ClienteController');
 	Route::resource('produto', 'ProdutoController')->except('show');
 	Route::resource('pedido', 'PedidoController');
+
+	// Pegar dados via JSON
+	Route::get('json/clientes', 'ClienteController@listaClientesJson')->name('clientes.json');
+	Route::get('json/produtos', 'ProdutoController@listarProdutosJson')->name('produtos.json');
 });
 
 Route::group(['middleware' => 'auth'], function () {

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Produto;
 use App\Http\Middleware\ChecarPermissao;
 use App\PedidoProduto;
+use Illuminate\Support\Facades\Input;
 
 class ProdutoController extends Controller
 {
@@ -56,9 +57,11 @@ class ProdutoController extends Controller
 
         $produto = new Produto;
 
+        $valor = str_replace('.', '', $request->valor);
+
         $produto->nome      = $request->nome;
         $produto->descricao = $request->descricao;
-        $produto->valor     = floatval(str_replace(',', '', $request->valor));
+        $produto->valor     = str_replace(',', '.', $valor);
 
         $produto->save();
 
@@ -135,5 +138,16 @@ class ProdutoController extends Controller
         $produto->delete();
 
         return redirect()->route('produto.index')->with('status', 'Produto deletado.');
+    }
+
+    public function listarProdutosJson() {
+        $produto = Input::get('q');
+
+        $produtos = Produto::select(DB::raw('nome as label'))
+            ->where('nome', 'like', '%'. $produto .'%')
+            ->orWhere('produto_id', 'like', '%'. $produto .'%')
+            ->take(5)->get();
+
+        return response()->json($produtos);
     }
 }

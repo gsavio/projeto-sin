@@ -60,7 +60,7 @@
                             <h3 class="mb-0">Últimos Pedidos</h3>
                         </div>
                         <div class="col text-right">
-                            <a href="#!" class="btn btn-sm btn-primary">Ver todos</a>
+                            <a href="{{ route('pedido.index') }}" class="btn btn-sm btn-primary">Ver todos</a>
                         </div>
                     </div>
                 </div>
@@ -72,11 +72,20 @@
                                 <th scope="col">Nº do Pedido</th>
                                 <th scope="col">Cliente</th>
                                 <th scope="col">Status</th>
-                                <th scope="col"></th>
+                                <th scope="col">Ação</th>
                             </tr>
                         </thead>
                         <tbody>
-                            
+                            @forelse ($ultimosPedidos as $pedido)
+                                <tr>
+                                    <th scope="col">#{{ $pedido->pedido_id }}</th>
+                                    <th scope="col">{{ substr($pedido->cliente->nome, 0, 15) }}</th>
+                                    <th scope="col"><strong>{{ ucfirst($pedido->status) }}</strong></th>
+                                    <th scope="col"><a href="{{ route('pedido.edit', $pedido->pedido_id) }}">Editar</a></th>
+                                </tr>
+                            @empty
+                                
+                            @endforelse
                         </tbody>
                     </table>
                 </div>

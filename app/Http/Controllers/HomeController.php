@@ -26,8 +26,8 @@ class HomeController extends Controller
     {
         $ultimosProdutos = $produto->take(5)->orderBy('produto_id', 'desc')->get();
 
-        // $ultimosPedidos = $pedido->take(5)->orderBy('pedido_id', 'desc')->get();
+        $ultimosPedidos = $pedido->take(5)->orderBy('pedido_id', 'desc')->get();
 
-        return view('dashboard', compact(['ultimosProdutos']));
+        return view('dashboard', compact(['ultimosProdutos', 'ultimosPedidos']));
     }
 }

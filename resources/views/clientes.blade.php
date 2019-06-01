@@ -9,7 +9,7 @@
 
 <div class="container-fluid mt--7">
     <div class="row mt-5">
-        <div class="col-xl-10 mx-auto mb-5 mb-xl-0">
+        <div class="col-xl-12 mx-auto mb-5 mb-xl-0">
             <div class="card shadow">
                 <div class="card-header border-0">
 
@@ -36,7 +36,7 @@
                     <table class="table align-items-center table-flush">
                         <thead class="thead-light">
                             <tr>
-                                <th scope="col">Nome</th>
+                                <th scope="col">Código - Nome (Cliente)</th>
                                 <th scope="col">E-mail</th>
                                 <th scope="col">CPF</th>
                                 <th scope="col">Endereço</th>
@@ -48,7 +48,7 @@
                             @foreach ($clientes as $cliente)
                             <tr>
                                 <th scope="row">
-                                    {{ $cliente->nome }}
+                                    <strong>{{ $cliente->cliente_id }}</strong> - {{ $cliente->nome }}
                                 </th>
                                 <td>
                                     {{ $cliente->email }}
@@ -57,7 +57,7 @@
                                     {{ $cliente->cpf }}
                                 </td>
                                 <td>
-                                    {{ $cliente->endereco}}, {{ $cliente->numero_casa }} <br /> {{ $cliente->cidade }} - {{ $cliente->estado }}
+                                    {{ $cliente->endereco}}, {{ $cliente->numero_casa }} <br /> {{ $cliente->bairro }}<br />{{ $cliente->cidade }} - {{ $cliente->estado }}
                                 </td>
                                 <td>{{ date('d/m/Y', strtotime($cliente->created_at)) }}</td>
                                 <td class="d-flex">

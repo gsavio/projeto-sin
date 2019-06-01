@@ -6,12 +6,13 @@ use Illuminate\Http\Request;
 use App\Cliente;
 use App\Http\Middleware\ChecarPermissao;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Input;
 
 class ClienteController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(ChecarPermissao::class);
+        $this->middleware(ChecarPermissao::class)->except('listaClintesJson');
     }
 
     /**
@@ -144,5 +145,22 @@ class ClienteController extends Controller
         $cliente->delete();
 
         return redirect()->route('cliente.index')->with('status', 'Cliente deletado.');
+    }
+
+    /**
+     * JSON com nomes dos clientes cadastrados
+     * 
+     * @param string $busca
+     * @return 
+     */
+    public function listaClientesJson() {
+        $termo = Input::get('q');
+
+        $clientes = Cliente::select(\DB::raw('nome as label'))
+            ->where('nome', 'like', '%'. $termo .'%')
+            ->orWhere('cliente_id', 'like', '%'. $termo .'%')
+            ->take(5)->get();
+
+        return response()->json($clientes);
     }
 }

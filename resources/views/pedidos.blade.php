@@ -40,6 +40,7 @@
                                 <th scope="col">Cliente</th>
                                 <th scope="col">Produtos</th>
                                 <th scope="col">Data do pedido</th>
+                                <th scope="col">Valor total</th>
                                 <th scope="col">Status do pedido</th>
                                 <th scope="col">Ação</th>
                             </tr>
@@ -61,6 +62,19 @@
                                 <td>
                                     {{ date('d/m/Y \à\s H:i', strtotime($pedido->created_at)) }}
                                 </td>
+                                <td>
+                                    @php
+                                        $valorTotal = 0;
+                                    @endphp    
+                                        
+                                    @foreach ($pedido->pedido_produtos as $produto)
+                                        @php
+                                            $valorTotal += (float) $produto->produto->valor;
+                                        @endphp
+                                    @endforeach
+
+                                    R$ {{ number_format($valorTotal, 2, ',', '.') }}
+                                </td>                                
                                 <td>
                                     <strong>{{ ucfirst($pedido->status) }}</strong>
                                 </td>
